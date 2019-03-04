@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000">
+
+    <com.hjl.imageselector.view.ViewPagerFixed
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000" />
+
+    <include
+        android:id="@+id/top_bar"
+        layout="@layout/include_top_bar" />
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#cc22292c"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:gravity="center|right">
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            >
+            <ImageView
+                android:id="@+id/cb_check"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:adjustViewBounds="true"
+                tools:src="@drawable/image_check_blue0"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="10dp"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/margin_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#000" />
+    </LinearLayout>
+</RelativeLayout>
