@@ -3,6 +3,7 @@ package com.hjl.imageselector.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.hjl.imageselector.ImagePicker;
 import com.hjl.imageselector.R;
 import com.hjl.imageselector.bean.ImageItem;
 
@@ -35,14 +37,14 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
     private static final int ITEM_TYPE_CAMERA = 0;  //第一个条目是相机
     private static final int ITEM_TYPE_NORMAL = 1;  //第一个条目不是相机
 
-    private Context mContext;
+    private Activity mActivity;
     private List<ImageItem> mData;
     private ArrayList<ImageItem> mSelectedImages = new ArrayList<>(); //全局保存的已经选中的图片数据
-    private int selectLimit = 9;
+    private int selectLimit = ImagePicker.getInstance().getSelectLimit();
     private boolean isShowCamera = true;         //是否显示拍照按钮
 
-    public ImageRecyclerAdapter(Context context, List<ImageItem> data,ArrayList<ImageItem> selectedImages) {
-        this.mContext = context;
+    public ImageRecyclerAdapter(Activity mActivity, List<ImageItem> data,ArrayList<ImageItem> selectedImages) {
+        this.mActivity = mActivity;
         this.mData = data;
         this.mSelectedImages = selectedImages;
         mData.add(0, new ImageItem());
@@ -109,13 +111,13 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
         if (viewType == ITEM_TYPE_CAMERA) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.adapter_camera_item, viewGroup, false);
+            View view = LayoutInflater.from(mActivity).inflate(R.layout.adapter_camera_item, viewGroup, false);
             return new CameraViewHolder(view);
         } else if (viewType == ITEM_TYPE_NORMAL) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.adapter_image_list_item, viewGroup, false);
+            View view = LayoutInflater.from(mActivity).inflate(R.layout.adapter_image_list_item, viewGroup, false);
             return new ItemViewHolder(view);
         } else {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.adapter_image_list_item, viewGroup, false);
+            View view = LayoutInflater.from(mActivity).inflate(R.layout.adapter_image_list_item, viewGroup, false);
             return new ItemViewHolder(view);
         }
 
@@ -129,7 +131,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
             final ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
 
 
-            Glide.with(mContext)
+            Glide.with(mActivity)
                     .load(new File(item.path))
                     .apply(new RequestOptions()
                             .skipMemoryCache(true)
@@ -144,6 +146,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
                         }
                     });
 
+            itemViewHolder.mIsChooseIcon.setVisibility(ImagePicker.getInstance().isMultiMode() ? View.VISIBLE : View.GONE);
 
             if (item.isSelected == 0) {
                 //未选中
@@ -185,10 +188,28 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
             itemViewHolder.mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mOnItemClickListener != null) {
-                        int position = itemViewHolder.getLayoutPosition();
-                        mOnItemClickListener.onItemClick(v, position);
+                    int layoutPosition = itemViewHolder.getLayoutPosition();
+
+                    if(!ImagePicker.getInstance().isMultiMode()){
+                        //单选
+                        mSelectedImages.clear();
+                        mSelectedImages.add(mData.get(layoutPosition));
+                        mData.get(layoutPosition).isSelected = 1;
+
+                        Intent intent = new Intent();
+                        intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,mSelectedImages);
+                        mActivity.setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
+                        mActivity.finish();
+
+                    }else{
+                        if (mOnItemClickListener != null) {
+                            int position = itemViewHolder.getLayoutPosition();
+                            mOnItemClickListener.onItemClick(v, position);
+                        }
                     }
+
+
+
 
                 }
             });
@@ -210,7 +231,6 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
         }
 
     }
-    Activity mActivity;
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
 
