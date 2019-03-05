@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
   <component name="CMakeSettings">
     <configurations>
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
@@ -28,25 +33,71 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="gradle-wrapper.properties" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
+      <file leaf-file-name="TestActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/hjl/imagedemo/TestActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state />
+            <state relative-caret-position="399">
+              <caret line="104" selection-start-line="104" selection-end-line="104" />
+            </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="proguard-rules.pro" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/proguard-rules.pro">
-          <provider selected="true" editor-type-id="text-editor">
+      <file leaf-file-name="activity_test.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_test.xml">
+          <provider editor-type-id="android-designer2">
             <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
+            </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="16" selection-start-column="16" selection-end-column="16" />
+            <state relative-caret-position="15">
+              <caret line="1" column="28" selection-start-line="1" selection-start-column="28" selection-end-line="1" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ImageGridActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/imageselector/src/main/java/com/hjl/imageselector/ui/ImageGridActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="183">
+              <caret line="309" column="16" selection-start-line="309" selection-start-column="16" selection-end-line="309" selection-end-column="16" />
+              <folding>
+                <element signature="e#5731#7289#0" expanded="true" />
+                <element signature="e#5966#6082#0" expanded="true" />
+                <element signature="e#6220#6305#0" expanded="true" />
+                <element signature="e#6591#6622#0" expanded="true" />
+                <element signature="e#6762#6807#0" expanded="true" />
+                <element signature="e#7288#7289#0" expanded="true" />
+                <element signature="e#7345#7841#0" expanded="true" />
+                <element signature="e#7840#7841#0" expanded="true" />
+                <element signature="e#7896#8134#0" expanded="true" />
+                <element signature="e#8133#8134#0" expanded="true" />
+                <element signature="e#8227#8369#0" expanded="true" />
+                <element signature="e#8368#8369#0" expanded="true" />
+                <element signature="e#8406#8867#0" expanded="true" />
+                <element signature="e#8866#8867#0" expanded="true" />
+                <element signature="e#8904#9794#0" expanded="true" />
+                <element signature="e#9793#9794#0" expanded="true" />
+                <element signature="e#10019#10737#0" expanded="true" />
+                <element signature="e#10736#10737#0" expanded="true" />
+                <element signature="e#10933#11049#0" expanded="true" />
+                <element signature="e#11163#11248#0" expanded="true" />
+                <element signature="e#11502#11533#0" expanded="true" />
+                <element signature="e#11649#11694#0" expanded="true" />
+                <element signature="e#11959#12249#0" expanded="true" />
+                <element signature="e#12248#12249#0" expanded="true" />
+                <element signature="e#13082#17752#0" expanded="true" />
+                <element signature="e#14049#14057#0" expanded="true" />
+                <element signature="e#17147#17204#0" expanded="true" />
+                <element signature="e#17751#17752#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -55,25 +106,16 @@
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="135">
-              <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+              <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GlideImageLoader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/hjl/imagedemo/imageloader/GlideImageLoader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/imageselector/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
+            <state relative-caret-position="71">
+              <caret line="21" column="31" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -3587,14 +3629,18 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/settings.gradle" />
-        <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/imageselector/build.gradle" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/hjl/imagedemo/TestActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_test.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/imageselector/src/main/java/com/hjl/imageselector/ui/ImageGridActivity.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="22" />
-    <option name="y" value="162" />
+    <option name="x" value="53" />
+    <option name="y" value="72" />
     <option name="width" value="1658" />
     <option name="height" value="903" />
   </component>
@@ -3641,9 +3687,71 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="com" type="cbb59c9e:AndroidPsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="com" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="hjl" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="com" type="cbb59c9e:AndroidPsiDirectoryNode" />
               <item name="hjl" type="462c0819:PsiDirectoryNode" />
               <item name="imagedemo" type="462c0819:PsiDirectoryNode" />
-              <item name="imageloader" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="values" type="ddeffd01:AndroidResFolderTypeNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="imageselector" type="feadf853:AndroidModuleNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="imageselector" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="imageselector" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="com" type="cbb59c9e:AndroidPsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="imageselector" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="com" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="hjl" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="imageselector" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="com" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="hjl" type="462c0819:PsiDirectoryNode" />
+              <item name="imageselector" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
+              <item name="imageselector" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="com" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="hjl" type="462c0819:PsiDirectoryNode" />
+              <item name="imageselector" type="462c0819:PsiDirectoryNode" />
+              <item name="ui" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ImageDemo" type="1abcf292:AndroidViewProjectNode" />
@@ -3790,8 +3898,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="22" y="162" width="1658" height="903" extended-state="0" />
-    <editor active="true" />
+    <frame x="53" y="72" width="1658" height="903" extended-state="0" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Android Profiler" />
@@ -3800,6 +3907,7 @@
       <window_info id="Build Variants" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="right" id="Preview" weight="0.32982674" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Terminal" />
@@ -3807,12 +3915,12 @@
       <window_info id="Captures" order="2" weight="0.25" />
       <window_info id="Capture Tool" />
       <window_info id="Designer" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
-      <window_info anchor="bottom" id="Build" visible="true" weight="0.3287841" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info anchor="bottom" id="Build" weight="0.3287841" />
       <window_info anchor="right" id="Gradle" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.37220845" />
       <window_info id="Favorites" side_tool="true" />
       <window_info anchor="right" id="Device File Explorer" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -3826,6 +3934,19 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/hjl/imagedemo/TestActivity.java</url>
+          <line>104</line>
+          <properties />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="2" />
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/proguard-rules.pro">
@@ -3852,17 +3973,78 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+    <entry file="file://$PROJECT_DIR$/imageselector/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+        <state relative-caret-position="71">
+          <caret line="21" column="31" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imageselector/build.gradle">
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="28" selection-start-line="1" selection-start-column="28" selection-end-line="1" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_test.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
-          <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
+          <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imageselector/src/main/java/com/hjl/imageselector/ui/ImageGridActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="309" column="16" selection-start-line="309" selection-start-column="16" selection-end-line="309" selection-end-column="16" />
+          <folding>
+            <element signature="e#5731#7289#0" expanded="true" />
+            <element signature="e#5966#6082#0" expanded="true" />
+            <element signature="e#6220#6305#0" expanded="true" />
+            <element signature="e#6591#6622#0" expanded="true" />
+            <element signature="e#6762#6807#0" expanded="true" />
+            <element signature="e#7288#7289#0" expanded="true" />
+            <element signature="e#7345#7841#0" expanded="true" />
+            <element signature="e#7840#7841#0" expanded="true" />
+            <element signature="e#7896#8134#0" expanded="true" />
+            <element signature="e#8133#8134#0" expanded="true" />
+            <element signature="e#8227#8369#0" expanded="true" />
+            <element signature="e#8368#8369#0" expanded="true" />
+            <element signature="e#8406#8867#0" expanded="true" />
+            <element signature="e#8866#8867#0" expanded="true" />
+            <element signature="e#8904#9794#0" expanded="true" />
+            <element signature="e#9793#9794#0" expanded="true" />
+            <element signature="e#10019#10737#0" expanded="true" />
+            <element signature="e#10736#10737#0" expanded="true" />
+            <element signature="e#10933#11049#0" expanded="true" />
+            <element signature="e#11163#11248#0" expanded="true" />
+            <element signature="e#11502#11533#0" expanded="true" />
+            <element signature="e#11649#11694#0" expanded="true" />
+            <element signature="e#11959#12249#0" expanded="true" />
+            <element signature="e#12248#12249#0" expanded="true" />
+            <element signature="e#13082#17752#0" expanded="true" />
+            <element signature="e#14049#14057#0" expanded="true" />
+            <element signature="e#17147#17204#0" expanded="true" />
+            <element signature="e#17751#17752#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/hjl/imagedemo/TestActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="104" selection-start-line="104" selection-end-line="104" />
         </state>
       </provider>
     </entry>

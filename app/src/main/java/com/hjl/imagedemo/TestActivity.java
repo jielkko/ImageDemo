@@ -19,6 +19,10 @@ import java.util.ArrayList;
 
 public class TestActivity extends AppCompatActivity {
     private Button mBtn;
+    private Button mBtn2;
+
+
+
 
     ArrayList<ImageItem> images = null;
 
@@ -28,6 +32,8 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         mBtn = (Button) findViewById(R.id.btn);
+
+        mBtn2 = (Button) findViewById(R.id.btn2);
 
 
 
@@ -60,6 +66,32 @@ public class TestActivity extends AppCompatActivity {
                 startActivityForResult(intent, 100);
             }
         });
+
+        mBtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //一般在Application初始化配置一次就可以
+                ImagePicker imagePicker = ImagePicker.getInstance();
+
+                imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+                imagePicker.setShowCamera(true);  //显示拍照按钮
+                imagePicker.setCrop(true);        //允许裁剪（单选才有效）
+                imagePicker.setSaveRectangle(true); //是否按矩形区域保存
+                imagePicker.setMultiMode(false);   //图片选择模式
+                imagePicker.setSelectLimit(1);    //选中数量限制
+                imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
+                imagePicker.setFocusWidth(800);   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+                imagePicker.setFocusHeight(800);  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
+                imagePicker.setOutPutX(1000);//保存文件的宽度。单位像素
+                imagePicker.setOutPutY(1000);//保存文件的高度。单位像素
+
+                //直接调用相机
+                Intent intent = new Intent(TestActivity.this, ImageGridActivity.class);
+                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS,true); // 是否是直接打开相机
+                startActivityForResult(intent, 100);
+            }
+        });
+
     }
 
 

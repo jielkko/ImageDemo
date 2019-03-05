@@ -66,6 +66,7 @@ public class ImageGridActivity extends ImageBaseActivity {
     private static String TAG = "ImageGridActivity";
 
     public static final String EXTRAS_IMAGES = "IMAGES";
+    public static final String EXTRAS_TAKE_PICKERS = "task";
 
 
     private ImageView mBtnBack;
@@ -91,7 +92,7 @@ public class ImageGridActivity extends ImageBaseActivity {
 
 
     private Boolean isMultiMode = true;
-
+    private Boolean isTakePickers = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +125,11 @@ public class ImageGridActivity extends ImageBaseActivity {
                 mSelectedImages = (ArrayList<ImageItem>) data.getSerializableExtra(EXTRAS_IMAGES);
             }
 
+            if ((Boolean) data.getSerializableExtra(EXTRAS_TAKE_PICKERS) != null) {
+                isTakePickers = (Boolean) data.getSerializableExtra(EXTRAS_TAKE_PICKERS);
+                Log.d(TAG, "isTakePickers: "+isTakePickers);
+            }
+
         }
 
 
@@ -138,6 +144,8 @@ public class ImageGridActivity extends ImageBaseActivity {
         mLlDir = (RelativeLayout) findViewById(R.id.ll_dir);
         mTvDir = (TextView) findViewById(R.id.tv_dir);
         mBtnPreview = (TextView) findViewById(R.id.btn_preview);
+
+
 
         //预览
         mBtnPreview.setVisibility(View.GONE);
@@ -213,6 +221,12 @@ public class ImageGridActivity extends ImageBaseActivity {
 
     @Override
     protected void setEvent() {
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         mBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -290,6 +304,11 @@ public class ImageGridActivity extends ImageBaseActivity {
             mBtnPreview.setText(getResources().getString(R.string.ip_preview));
             mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_secondary_inverted));
             mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_secondary_inverted));
+        }
+
+        if(isTakePickers){
+            //拍照
+            takePicture(ImageGridActivity.this, RC_TACKPICTURE);
         }
     }
 
