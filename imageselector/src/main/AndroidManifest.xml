@@ -26,7 +26,9 @@
             android:name=".ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ImagePickerTheme" />
-        <activity android:name=".ui.ImagePreviewActivity"></activity>
+        <activity android:name=".ui.ImagePreviewActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/ImagePickerTheme" />
     </application>
 
 </manifest>

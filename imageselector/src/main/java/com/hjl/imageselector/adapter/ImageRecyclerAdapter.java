@@ -41,10 +41,23 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
     private int selectLimit = 9;
     private boolean isShowCamera = true;         //是否显示拍照按钮
 
-    public ImageRecyclerAdapter(Context context, List<ImageItem> data) {
+    public ImageRecyclerAdapter(Context context, List<ImageItem> data,ArrayList<ImageItem> selectedImages) {
         this.mContext = context;
         this.mData = data;
+        this.mSelectedImages = selectedImages;
         mData.add(0, new ImageItem());
+    }
+
+    private void setSelect(){
+
+        for(int i = 1;i<mData.size();i++){
+            if(mSelectedImages.contains(mData.get(i))){
+                mData.get(i).isSelected = 1;
+            }else{
+                mData.get(i).isSelected = 0;
+            }
+        }
+
     }
 
     public void setSelectedPhotos(List<ImageItem> selectedPhotos) {
@@ -52,8 +65,10 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
             mData = selectedPhotos;
             mData.add(0, new ImageItem());
         }
+        setSelect();
         notifyDataSetChanged();
     }
+
 
     /**
      * 获取选中图片数量
@@ -145,7 +160,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     int layoutPosition = itemViewHolder.getLayoutPosition();
 
-                    Toast.makeText(mContext, "点击" + layoutPosition, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext, "点击" + layoutPosition, Toast.LENGTH_SHORT).show();
                     if (mData.get(layoutPosition).isSelected == 0) {
                         //未选中
                         if (mSelectedImages.size() < selectLimit) {

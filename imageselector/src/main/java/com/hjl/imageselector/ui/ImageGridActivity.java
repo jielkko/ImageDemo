@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -32,10 +35,13 @@ import android.widget.TextView;
 
 import com.hjl.imageselector.ImagePicker;
 import com.hjl.imageselector.R;
+import com.hjl.imageselector.adapter.ImageFolderAdapter;
 import com.hjl.imageselector.adapter.ImageRecyclerAdapter;
+import com.hjl.imageselector.bean.ImageFolder;
 import com.hjl.imageselector.bean.ImageItem;
 import com.hjl.imageselector.util.ProviderUtil;
 import com.hjl.imageselector.util.Utils;
+import com.hjl.imageselector.view.FolderPopUpWindow;
 import com.hjl.imageselector.view.GridSpacingItemDecoration;
 
 import java.io.File;
@@ -58,7 +64,7 @@ public class ImageGridActivity extends ImageBaseActivity {
 
     private static String TAG = "ImageGridActivity";
 
-
+    public static final String EXTRAS_IMAGES = "IMAGES";
 
 
     private ImageView mBtnBack;
@@ -73,10 +79,16 @@ public class ImageGridActivity extends ImageBaseActivity {
 
 
     private LinearLayoutManager mLayoutManager;
-    public List<ImageItem> mData = new ArrayList<>();
+    public ArrayList<ImageItem> mSelectedImages = new ArrayList<>();
+    public ArrayList<ImageItem> mAllImages = new ArrayList<>();
     public ImageRecyclerAdapter mAdapter;
 
-    public List<ImageItem> mAllData = new ArrayList<>();
+
+    private ImageFolderAdapter mImageFolderAdapter;    //图片文件夹的适配器
+    private FolderPopUpWindow mFolderPopupWindow;  //ImageSet的PopupWindow
+    private List<ImageFolder> mImageFolders = new ArrayList<>();   //所有的图片文件夹
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,6 +114,17 @@ public class ImageGridActivity extends ImageBaseActivity {
     }
 
     protected void initView() {
+        Intent data = getIntent();
+        // 新增可直接拍照
+        if (data != null && data.getExtras() != null) {
+
+            if((ArrayList<ImageItem>) data.getSerializableExtra(EXTRAS_IMAGES)!=null){
+                mSelectedImages = (ArrayList<ImageItem>) data.getSerializableExtra(EXTRAS_IMAGES);
+            }
+
+        }
+
+        Log.d(TAG, "isMultiMode: "+ImagePicker.getInstance().isMultiMode());
 
         mContext = ImageGridActivity.this;
 
@@ -115,6 +138,13 @@ public class ImageGridActivity extends ImageBaseActivity {
         mTvDir = (TextView) findViewById(R.id.tv_dir);
         mBtnPreview = (TextView) findViewById(R.id.btn_preview);
 
+        //预览
+        mBtnPreview.setVisibility(View.GONE);
+
+        mImageFolderAdapter = new ImageFolderAdapter(this, null);
+
+
+
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 3);
         //layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
 
@@ -123,7 +153,9 @@ public class ImageGridActivity extends ImageBaseActivity {
 
         ((DefaultItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
-        mAdapter = new ImageRecyclerAdapter(mContext, mData);
+        mAdapter = new ImageRecyclerAdapter(mContext, mAllImages,mSelectedImages);
+
+
         mRecyclerView.setAdapter(mAdapter);
 
         //选择
@@ -134,7 +166,7 @@ public class ImageGridActivity extends ImageBaseActivity {
                     mBtnOk.setText(getString(R.string.ip_select_complete, mAdapter.getmSelectedImagesNum(), 9));
                     mBtnOk.setEnabled(true);
                     mBtnPreview.setEnabled(true);
-                    mBtnPreview.setText(getResources().getString(R.string.ip_preview_count, 9));
+                    mBtnPreview.setText(getResources().getString(R.string.ip_preview_count, mAdapter.getmSelectedImagesNum()));
                     mBtnOk.setTextColor(mContext.getResources().getColor(R.color.ip_text_primary_inverted));
                     mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_primary_inverted));
                 }else{
@@ -157,10 +189,10 @@ public class ImageGridActivity extends ImageBaseActivity {
             @Override
             public void onItemClick(View view, int position) {
                 //ToastUtil.showShort(mContext, "点击条目上的按钮" + position);
-                Intent intent = new Intent();
+              /*  Intent intent = new Intent();
                 intent.setClass(ImageGridActivity.this, ImagePreviewActivity.class);
                 //intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, images);
-                startActivityForResult(intent, 200);
+                startActivityForResult(intent, 200);*/
 
             }
         });
@@ -186,19 +218,73 @@ public class ImageGridActivity extends ImageBaseActivity {
                 }
             }
         });
+        mLlDir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mImageFolders == null) {
+                    Log.i("ImageGridActivity", "您的手机没有图片");
+                    return;
+                }
+                //点击文件夹按钮
+                createPopupFolderList();
+                mImageFolderAdapter.refreshData(mImageFolders);  //刷新数据
+                if (mFolderPopupWindow.isShowing()) {
+                    mFolderPopupWindow.dismiss();
+                } else {
+                    mFolderPopupWindow.showAtLocation(mFooterBar, Gravity.NO_GRAVITY, 0, 0);
+                    //默认选择当前选择的上一个，当目录很多时，直接定位到已选中的条目
+                    int index = mImageFolderAdapter.getSelectIndex();
+                    index = index == 0 ? index : index - 1;
+                    mFolderPopupWindow.setSelection(index);
+                }
+            }
+        });
+
+
+    }
+
+    /**
+     * 创建弹出的ListView
+     */
+    private void createPopupFolderList() {
+        mFolderPopupWindow = new FolderPopUpWindow(mContext, mImageFolderAdapter);
+        mFolderPopupWindow.setOnItemClickListener(new FolderPopUpWindow.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                mImageFolderAdapter.setSelectIndex(position);
+                mFolderPopupWindow.dismiss();
+                ImageFolder imageFolder = (ImageFolder) adapterView.getAdapter().getItem(position);
+                if (null != imageFolder) {
+                    mAllImages.clear();
+                    mAllImages.add(new ImageItem());
+                    mAllImages.addAll(imageFolder.images);
+                    mAdapter.notifyDataSetChanged();
+                    mTvDir.setText(imageFolder.name);
+                }
+            }
+        });
+        mFolderPopupWindow.setMargin(mFooterBar.getHeight());
     }
 
     protected void initData(){
         initImage();
 
-        mBtnOk.setText(getString(R.string.ip_complete));
-        mBtnOk.setEnabled(false);
-        mBtnPreview.setEnabled(false);
-        mBtnPreview.setText(getResources().getString(R.string.ip_preview));
-        mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_secondary_inverted));
-        mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_secondary_inverted));
 
-
+        if(mSelectedImages.size()>0){
+            mBtnOk.setText(getString(R.string.ip_select_complete, mAdapter.getmSelectedImagesNum(), 9));
+            mBtnOk.setEnabled(true);
+            mBtnPreview.setEnabled(true);
+            mBtnPreview.setText(getResources().getString(R.string.ip_preview_count, mAdapter.getmSelectedImagesNum()));
+            mBtnOk.setTextColor(mContext.getResources().getColor(R.color.ip_text_primary_inverted));
+            mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_primary_inverted));
+        }else{
+            mBtnOk.setText(getString(R.string.ip_complete));
+            mBtnOk.setEnabled(false);
+            mBtnPreview.setEnabled(false);
+            mBtnPreview.setText(getResources().getString(R.string.ip_preview));
+            mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_secondary_inverted));
+            mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_secondary_inverted));
+        }
     }
 
 
@@ -208,8 +294,8 @@ public class ImageGridActivity extends ImageBaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                //mAdapter.setSelectedPhotos(mData);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.setSelectedPhotos(mAllImages);
+                //mAdapter.notifyDataSetChanged();
             }
         }
     };
@@ -238,7 +324,7 @@ public class ImageGridActivity extends ImageBaseActivity {
                 //扫描某个图片文件夹
                 //if (id == LOADER_CATEGORY)
                 //cursor = new CursorLoader(activity, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION, IMAGE_PROJECTION[1] + " like '%" + args.getString("path") + "%'", null, IMAGE_PROJECTION[6] + " DESC");
-                mData.clear();
+                mAllImages.clear();
 
                 Cursor cursor = getContentResolver().query(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, IMAGE_PROJECTION[6] + " DESC");
@@ -281,10 +367,41 @@ public class ImageGridActivity extends ImageBaseActivity {
                     imageItem.height = imageHeight;
                     imageItem.mimeType = imageMimeType;
                     imageItem.addTime = imageAddTime;
-                    mData.add(imageItem);
+                    mAllImages.add(imageItem);
+
+                    //根据父路径分类存放图片
+                    File imageFile = new File(imagePath);
+                    File imageParentFile = imageFile.getParentFile();
+                    ImageFolder imageFolder = new ImageFolder();
+                    imageFolder.name = imageParentFile.getName();
+                    imageFolder.path = imageParentFile.getAbsolutePath();
+
+                    if (!mImageFolders.contains(imageFolder)) {
+                        ArrayList<ImageItem> images = new ArrayList<>();
+                        images.add(imageItem);
+                        imageFolder.cover = imageItem;
+                        imageFolder.images = images;
+                        mImageFolders.add(imageFolder);
+                    } else {
+                        mImageFolders.get(mImageFolders.indexOf(imageFolder)).images.add(imageItem);
+                    }
 
                 }
-                Log.d(TAG, "initData: " + mData.size());
+
+                //防止没有图片报异常
+                if (cursor != null && mAllImages != null) {
+                    if (cursor.getCount() > 0 && mAllImages.size() > 0) {
+                        //构造所有图片的集合
+                        ImageFolder allImagesFolder = new ImageFolder();
+                        allImagesFolder.name = mContext.getResources().getString(R.string.ip_all_images);
+                        allImagesFolder.path = "/";
+                        allImagesFolder.cover = mAllImages.get(0);
+                        allImagesFolder.images = mAllImages;
+                        mImageFolders.add(0, allImagesFolder);  //确保第一条是所有图片
+                    }
+                }
+
+                Log.d(TAG, "initData: " + mAllImages.size());
 
                 Message message = new Message();
                 message.what = 1;

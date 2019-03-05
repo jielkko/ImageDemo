@@ -20,12 +20,15 @@ public class TestActivity extends AppCompatActivity {
 
     ArrayList<ImageItem> images = null;
 
-
+    ImagePicker imagePicker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         mBtn = (Button) findViewById(R.id.btn);
+
+        imagePicker.setMultiMode(false);
+
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,7 +39,7 @@ public class TestActivity extends AppCompatActivity {
                 //选择图片
                 //打开选择,本次允许选择的数量
                 intent.setClass(TestActivity.this, ImageGridActivity.class);
-                //intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, images);
+                intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, images);
                 startActivityForResult(intent, 100);
             }
         });
