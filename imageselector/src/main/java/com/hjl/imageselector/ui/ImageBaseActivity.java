@@ -5,6 +5,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Picture;
 import android.net.Uri;
 import android.os.Build;
@@ -144,9 +145,21 @@ public abstract class ImageBaseActivity extends AppCompatActivity implements Eas
                 if ( resultCode == RESULT_OK) {
                     Log.d(TAG, "返回选择结果: "+data);
 
+                    //获取Options对象
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    //仅做解码处理，不加载到内存
+                    options.inJustDecodeBounds = true;
+                    //解析文件
+                    BitmapFactory.decodeFile(takeImageFile.getPath(), options);
+                     //获取宽高
+                    int imgWidth = options.outWidth;
+                    int imgHeight = options.outHeight;
+
                     ArrayList<ImageItem> imageList = new ArrayList<>();
                     ImageItem imageItem = new ImageItem();
                     imageItem.path = takeImageFile.getPath();
+                    imageItem.width = imgWidth;
+                    imageItem.height = imgHeight;
                     imageList.add(imageItem);
 
                 /*    if (imagePicker.isCrop()) {
