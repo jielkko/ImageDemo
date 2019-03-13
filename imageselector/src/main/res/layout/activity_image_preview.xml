@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:background="#cc22292c"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:visibility="visible"
         android:gravity="center|right">
 

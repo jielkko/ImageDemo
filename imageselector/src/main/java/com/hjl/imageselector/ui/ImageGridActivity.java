@@ -57,6 +57,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.widget.Toast;
 
 /**
  * 图片选择
@@ -67,7 +68,8 @@ public class ImageGridActivity extends ImageBaseActivity {
 
     public static final String EXTRAS_IMAGES = "IMAGES";
     public static final String EXTRAS_TAKE_PICKERS = "task";
-
+    public static final String EXTRAS_TAKE_POSITION = "position";
+    public static final String EXTRAS_TAKE_SELECTED = "select";
 
     private ImageView mBtnBack;
     private TextView mTvDes;
@@ -202,10 +204,12 @@ public class ImageGridActivity extends ImageBaseActivity {
             @Override
             public void onItemClick(View view, int position) {
                 //ToastUtil.showShort(mContext, "点击条目上的按钮" + position);
-              /*  Intent intent = new Intent();
+                Intent intent = new Intent();
                 intent.setClass(ImageGridActivity.this, ImagePreviewActivity.class);
-                //intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, images);
-                startActivityForResult(intent, 200);*/
+                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_POSITION, position);
+                intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, mAllImages);
+                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_SELECTED, mSelectedImages);
+                startActivityForResult(intent, 200);
 
 
             }
@@ -318,7 +322,7 @@ public class ImageGridActivity extends ImageBaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                mAdapter.setSelectedPhotos(mAllImages);
+                mAdapter.setAllImages(mAllImages);
                 //mAdapter.notifyDataSetChanged();
             }
         }
@@ -503,6 +507,50 @@ public class ImageGridActivity extends ImageBaseActivity {
         return new File(folder, filename);
     }
 
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+            if (data != null) {
+                mSelectedImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+
+                Intent intent = new Intent();
+                intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, mSelectedImages);
+                setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
+                finish();
+            } else {
+
+            }
+
+        }
+        if (resultCode == ImagePicker.RESULT_CODE_BACK) {
+            if (data != null) {
+                mSelectedImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                mAdapter.setSelectedImages(mSelectedImages);
+
+                if (mAdapter.getmSelectedImagesNum() > 0) {
+                    mBtnOk.setText(getString(R.string.ip_select_complete, mAdapter.getmSelectedImagesNum(), ImagePicker.getInstance().getSelectLimit()));
+                    mBtnOk.setEnabled(true);
+                    mBtnPreview.setEnabled(true);
+                    mBtnPreview.setText(getResources().getString(R.string.ip_preview_count, mAdapter.getmSelectedImagesNum()));
+                    mBtnOk.setTextColor(mContext.getResources().getColor(R.color.ip_text_primary_inverted));
+                    mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_primary_inverted));
+                } else {
+                    mBtnOk.setText(getString(R.string.ip_complete));
+                    mBtnOk.setEnabled(false);
+                    mBtnPreview.setEnabled(false);
+                    mBtnPreview.setText(getResources().getString(R.string.ip_preview));
+                    mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_secondary_inverted));
+                    mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_secondary_inverted));
+                }
+            } else {
+
+            }
+
+        }
+    }
 
 }
 

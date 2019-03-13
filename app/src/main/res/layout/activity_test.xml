@@ -11,8 +11,13 @@
         android:id="@+id/btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="相册"/>
+        android:text="相册-单选"/>
 
+    <Button
+        android:id="@+id/btn1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="相册-多选"/>
 
     <Button
         android:id="@+id/btn2"

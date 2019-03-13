@@ -62,11 +62,17 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
 
     }
 
-    public void setSelectedPhotos(List<ImageItem> selectedPhotos) {
+    public void setAllImages(List<ImageItem> selectedPhotos) {
         if (selectedPhotos != null) {
             mData = selectedPhotos;
             mData.add(0, new ImageItem());
         }
+        setSelect();
+        notifyDataSetChanged();
+    }
+
+    public void setSelectedImages(ArrayList<ImageItem> selectedPhotos) {
+        mSelectedImages = selectedPhotos;
         setSelect();
         notifyDataSetChanged();
     }
