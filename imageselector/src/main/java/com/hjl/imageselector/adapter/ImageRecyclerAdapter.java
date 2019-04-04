@@ -196,7 +196,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     int layoutPosition = itemViewHolder.getLayoutPosition();
 
-                    if(!ImagePicker.getInstance().isMultiMode()){
+                    /*if(!ImagePicker.getInstance().isMultiMode()){
                         //单选
                         mSelectedImages.clear();
                         mSelectedImages.add(mData.get(layoutPosition));
@@ -212,8 +212,11 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
                             int position = itemViewHolder.getLayoutPosition();
                             mOnItemClickListener.onItemClick(v, position);
                         }
+                    }*/
+                    if (mOnItemClickListener != null) {
+                        int position = itemViewHolder.getLayoutPosition();
+                        mOnItemClickListener.onItemClick(v, position);
                     }
-
 
 
 

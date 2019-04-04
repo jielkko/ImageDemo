@@ -14,6 +14,13 @@
         android:text="相册-单选"/>
 
     <Button
+        android:id="@+id/btn3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="相册-裁剪"/>
+
+
+    <Button
         android:id="@+id/btn1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

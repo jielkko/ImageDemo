@@ -150,7 +150,12 @@ public class ImageGridActivity extends ImageBaseActivity {
 
 
         //预览
-        mBtnPreview.setVisibility(View.GONE);
+        if (ImagePicker.getInstance().isMultiMode()) {
+            mBtnPreview.setVisibility(View.VISIBLE);
+        }else{
+            mBtnPreview.setVisibility(View.GONE);
+        }
+        //mBtnPreview.setVisibility(View.GONE);
 
         Log.d(TAG, "是否多选: " + ImagePicker.getInstance().isMultiMode());
         isMultiMode = ImagePicker.getInstance().isMultiMode();
@@ -204,16 +209,44 @@ public class ImageGridActivity extends ImageBaseActivity {
             @Override
             public void onItemClick(View view, int position) {
                 //ToastUtil.showShort(mContext, "点击条目上的按钮" + position);
-                Intent intent = new Intent();
-                intent.setClass(ImageGridActivity.this, ImagePreviewActivity.class);
-                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_POSITION, position);
-                intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, mAllImages);
-                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_SELECTED, mSelectedImages);
-                startActivityForResult(intent, 200);
-
-
+                if (ImagePicker.getInstance().isMultiMode()) {
+                    Intent intent = new Intent();
+                    intent.setClass(ImageGridActivity.this, ImagePreviewActivity.class);
+                    intent.putExtra(ImageGridActivity.EXTRAS_TAKE_POSITION, position);
+                    intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, mAllImages);
+                    intent.putExtra(ImageGridActivity.EXTRAS_TAKE_SELECTED, mSelectedImages);
+                    startActivityForResult(intent, 200);
+                } else {
+                    ImagePicker.getInstance().clearSelectedImages();
+                    ImagePicker.getInstance().addSelectedImageItem(position, mAllImages.get(position), true);
+                    if (ImagePicker.getInstance().isCrop()) {
+                        Intent intent = new Intent(ImageGridActivity.this, ImageCropActivity.class);
+                        startActivityForResult(intent, ImagePicker.REQUEST_CODE_CROP);  //单选需要裁剪，进入裁剪界面
+                    } else {
+                        Intent intent = new Intent();
+                        intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, mSelectedImages);
+                        setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
+                        finish();
+                    }
+                }
             }
         });
+        //预览 选中的图片
+        mBtnPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<ImageItem> allImage = new ArrayList<>();
+                allImage.add(new ImageItem());
+                allImage.addAll(mSelectedImages);
+                Intent intent = new Intent();
+                intent.setClass(ImageGridActivity.this, ImagePreviewActivity.class);
+                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_POSITION, 1);
+                intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, allImage);
+                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_SELECTED, mSelectedImages);
+                startActivityForResult(intent, 200);
+            }
+        });
+
         mAdapter.setOnTaskCreamPictureClickListener(new ImageRecyclerAdapter.OnTaskCreamPictureClickListener() {
             @Override
             public void onItemClick(View view, int position) {
