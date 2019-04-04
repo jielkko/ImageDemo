@@ -223,10 +223,17 @@ public class ImageGridActivity extends ImageBaseActivity {
                         Intent intent = new Intent(ImageGridActivity.this, ImageCropActivity.class);
                         startActivityForResult(intent, ImagePicker.REQUEST_CODE_CROP);  //单选需要裁剪，进入裁剪界面
                     } else {
+
+                        mSelectedImages.clear();
+                        mSelectedImages.add(mAllImages.get(position));
+
+
                         Intent intent = new Intent();
                         intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, mSelectedImages);
                         setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
                         finish();
+
+
                     }
                 }
             }
