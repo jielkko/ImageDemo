@@ -2,20 +2,20 @@ package com.hjl.imageselector.adapter;
 
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
@@ -23,17 +23,24 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.signature.ObjectKey;
 import com.hjl.imageselector.ImagePicker;
 import com.hjl.imageselector.R;
 import com.hjl.imageselector.bean.ImageItem;
+import com.hjl.imageselector.common.ImageContextUtil;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 public class ImageRecyclerAdapter extends RecyclerView.Adapter {
 
+    private static final String TAG = "ImageRecyclerAdapter";  //第一个条目是相机
     private static final int ITEM_TYPE_CAMERA = 0;  //第一个条目是相机
     private static final int ITEM_TYPE_NORMAL = 1;  //第一个条目不是相机
 
@@ -43,24 +50,31 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
     private int selectLimit = ImagePicker.getInstance().getSelectLimit();
     private boolean isShowCamera = true;         //是否显示拍照按钮
 
-    public ImageRecyclerAdapter(Activity mActivity, List<ImageItem> data,ArrayList<ImageItem> selectedImages) {
+    public ImageRecyclerAdapter(Activity mActivity, List<ImageItem> data, ArrayList<ImageItem> selectedImages) {
         this.mActivity = mActivity;
         this.mData = data;
         this.mSelectedImages = selectedImages;
         mData.add(0, new ImageItem());
     }
 
-    private void setSelect(){
+    private void setSelect() {
 
-        for(int i = 1;i<mData.size();i++){
-            if(mSelectedImages.contains(mData.get(i))){
+        for (int i = 1; i < mData.size(); i++) {
+            if (mSelectedImages.contains(mData.get(i))) {
                 mData.get(i).isSelected = 1;
-            }else{
+            } else {
                 mData.get(i).isSelected = 0;
             }
         }
 
     }
+
+    public void refreshData(ArrayList<ImageItem> images) {
+        if (mData == null || images.size() == 0) this.mData = new ArrayList<>();
+        else this.mData = images;
+        notifyDataSetChanged();
+    }
+
 
     public void setAllImages(List<ImageItem> selectedPhotos) {
         if (selectedPhotos != null) {
@@ -68,7 +82,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
             mData.add(0, new ImageItem());
         }
         setSelect();
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     public void setSelectedImages(ArrayList<ImageItem> selectedPhotos) {
@@ -130,18 +144,110 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
     }
 
     @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder viewHolder) {
+        super.onViewRecycled(viewHolder);
+
+
+        if (viewHolder instanceof ItemViewHolder) {
+            final ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
+
+            ImageView imageView = itemViewHolder.mIcon;
+            if (imageView != null) {
+                Glide.with(mActivity).clear(imageView);
+            }
+        }
+
+    }
+
+    /**
+     * 加载本地图片
+     *
+     * @param url
+     * @return
+     */
+    public static Bitmap getLoacalBitmap(String url) {
+        try {
+            FileInputStream fis = new FileInputStream(url);
+            return BitmapFactory.decodeStream(fis);  ///把流转化为Bitmap图片
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
+        int listSize = mData.size();
         ImageItem item = mData.get(i);
         if (viewHolder instanceof ItemViewHolder) {
             final ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
 
+            Log.d(TAG, "onBindViewHolder: " + mActivity);
 
-            Glide.with(mActivity)
+          /*  if (!item.path.equals(itemViewHolder.mContainer.getTag())) {
+                // 加载图片
+                *//*为什么图片一定要转化为 Bitmap格式的！！ *//*
+
+
+                itemViewHolder.mContainer.setTag(item.path);
+            }*/
+            Log.d(TAG, "item.path= " + item.path);
+            if (item.path != null) {
+
+
+                Glide.with(mActivity)
+                        .load(new File(item.path))
+                        .apply(new RequestOptions()
+                                //.skipMemoryCache(true)
+                                //.diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .override(200, 200)
+                                .centerCrop()
+                        )
+                        .into(new SimpleTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                itemViewHolder.mIcon.setImageDrawable(resource);
+                            }
+                        });
+            }else{
+                Glide.with(mActivity)
+                        .load(R.drawable.ic_default_image)
+                        .apply(new RequestOptions()
+                                //.skipMemoryCache(true)
+                                //.diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .override(200, 200)
+                                .error(R.drawable.ic_default_image)
+                                .centerCrop()
+                        )
+                        .into(new SimpleTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                itemViewHolder.mIcon.setImageDrawable(resource);
+                            }
+                        });
+            }
+
+
+
+      /*      Glide.with(mActivity)
                     .load(new File(item.path))
                     .apply(new RequestOptions()
-                            .skipMemoryCache(true)
+                            .skipMemoryCache(true)//跳过内存缓存。
+                            //.skipMemoryCache(true)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .override(200, 200)
+                            .centerCrop()
+                    )
+                    .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
+                    .thumbnail(0.1f)
+                    .into(itemViewHolder.mIcon);*/
+         /*   Glide.with(mActivity)
+                    .load(new File(item.path))
+                    .apply(new RequestOptions()
+                            //.skipMemoryCache(true)
+                            //.diskCacheStrategy(DiskCacheStrategy.ALL)
                             .override(200, 200)
                             .centerCrop()
                     )
@@ -150,7 +256,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
                         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                             itemViewHolder.mIcon.setImageDrawable(resource);
                         }
-                    });
+                    });*/
 
             itemViewHolder.mIsChooseIcon.setVisibility(ImagePicker.getInstance().isMultiMode() ? View.VISIBLE : View.GONE);
 
@@ -217,7 +323,6 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
                         int position = itemViewHolder.getLayoutPosition();
                         mOnItemClickListener.onItemClick(v, position);
                     }
-
 
 
                 }

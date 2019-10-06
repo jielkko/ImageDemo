@@ -95,6 +95,7 @@ public class ImageGridActivity extends ImageBaseActivity {
 
     private Boolean isMultiMode = true;
     private Boolean isTakePickers = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +130,7 @@ public class ImageGridActivity extends ImageBaseActivity {
 
             if ((Boolean) data.getSerializableExtra(EXTRAS_TAKE_PICKERS) != null) {
                 isTakePickers = (Boolean) data.getSerializableExtra(EXTRAS_TAKE_PICKERS);
-                Log.d(TAG, "isTakePickers: "+isTakePickers);
+                Log.d(TAG, "isTakePickers: " + isTakePickers);
             }
 
         }
@@ -148,11 +149,10 @@ public class ImageGridActivity extends ImageBaseActivity {
         mBtnPreview = (TextView) findViewById(R.id.btn_preview);
 
 
-
         //预览
         if (ImagePicker.getInstance().isMultiMode()) {
             mBtnPreview.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mBtnPreview.setVisibility(View.GONE);
         }
         //mBtnPreview.setVisibility(View.GONE);
@@ -173,8 +173,8 @@ public class ImageGridActivity extends ImageBaseActivity {
 
         ((DefaultItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
-        mAdapter = new ImageRecyclerAdapter(this, mAllImages, mSelectedImages);
-
+        mAdapter = new ImageRecyclerAdapter((Activity) mContext, mAllImages, mSelectedImages);
+        mAdapter.setHasStableIds (true);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -319,12 +319,19 @@ public class ImageGridActivity extends ImageBaseActivity {
                 mFolderPopupWindow.dismiss();
                 ImageFolder imageFolder = (ImageFolder) adapterView.getAdapter().getItem(position);
                 if (null != imageFolder) {
-                    mAllImages.clear();
-                    mAllImages.add(new ImageItem());
-                    mAllImages.addAll(imageFolder.images);
-                    mAdapter.notifyDataSetChanged();
+                    //mAllImages.clear();
+                    ArrayList<ImageItem> imgs = new ArrayList<>();
+                    imgs.add(new ImageItem());
+                    imgs.addAll(imageFolder.images);
+
+                    //mAllImages.addAll(imgs);
+                    //mAdapter.setAllImages(imageFolder.images);
+                    //mAdapter.notifyDataSetChanged();
+                    mAdapter.refreshData(imgs);
                     mTvDir.setText(imageFolder.name);
                 }
+
+
             }
         });
         mFolderPopupWindow.setMargin(mFooterBar.getHeight());
@@ -350,7 +357,7 @@ public class ImageGridActivity extends ImageBaseActivity {
             mBtnPreview.setTextColor(mContext.getResources().getColor(R.color.ip_text_secondary_inverted));
         }
 
-        if(isTakePickers){
+        if (isTakePickers) {
             //拍照
             takePicture(ImageGridActivity.this, RC_TACKPICTURE);
         }
@@ -363,7 +370,7 @@ public class ImageGridActivity extends ImageBaseActivity {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 mAdapter.setAllImages(mAllImages);
-                //mAdapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
             }
         }
     };
@@ -546,7 +553,6 @@ public class ImageGridActivity extends ImageBaseActivity {
         String filename = prefix + dateFormat.format(new Date(System.currentTimeMillis())) + suffix;
         return new File(folder, filename);
     }
-
 
 
     @Override

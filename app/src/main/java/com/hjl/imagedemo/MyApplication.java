@@ -1,11 +1,8 @@
 package com.hjl.imagedemo;
 
 import android.app.Application;
-import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-
-import org.xutils.image.ImageOptions;
+import com.hjl.imageselector.common.ImageContextUtil;
 
 
 public class MyApplication extends Application {
@@ -16,5 +13,6 @@ public class MyApplication extends Application {
         super.onCreate();
 
         ContextUtil.init(this);
+        ImageContextUtil.init(this);
     }
 }
