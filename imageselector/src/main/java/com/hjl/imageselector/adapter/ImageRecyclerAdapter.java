@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
@@ -50,16 +51,21 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
     private int selectLimit = ImagePicker.getInstance().getSelectLimit();
     private boolean isShowCamera = true;         //是否显示拍照按钮
 
+
+    //HeaderView, FooterView
+    private View mHeaderView;
+    private View mFooterView;
+
     public ImageRecyclerAdapter(Activity mActivity, List<ImageItem> data, ArrayList<ImageItem> selectedImages) {
         this.mActivity = mActivity;
         this.mData = data;
         this.mSelectedImages = selectedImages;
-        mData.add(0, new ImageItem());
+        //mData.add(0, new ImageItem());
     }
 
     private void setSelect() {
 
-        for (int i = 1; i < mData.size(); i++) {
+        for (int i = 0; i < mData.size(); i++) {
             if (mSelectedImages.contains(mData.get(i))) {
                 mData.get(i).isSelected = 1;
             } else {
@@ -70,8 +76,10 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
     }
 
     public void refreshData(ArrayList<ImageItem> images) {
-        if (mData == null || images.size() == 0) this.mData = new ArrayList<>();
-        else this.mData = images;
+        if (images != null) {
+            mData = images;
+        }
+        setSelect();
         notifyDataSetChanged();
     }
 
@@ -79,7 +87,6 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
     public void setAllImages(List<ImageItem> selectedPhotos) {
         if (selectedPhotos != null) {
             mData = selectedPhotos;
-            mData.add(0, new ImageItem());
         }
         setSelect();
         //notifyDataSetChanged();
@@ -91,6 +98,24 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    //HeaderView和FooterView的get和set函数
+    public View getHeaderView() {
+        return mHeaderView;
+    }
+
+    public void setHeaderView(View headerView) {
+        mHeaderView = headerView;
+        notifyItemInserted(0);
+    }
+
+    public View getFooterView() {
+        return mFooterView;
+    }
+
+    public void setFooterView(View footerView) {
+        mFooterView = footerView;
+        notifyItemInserted(getItemCount() - 1);
+    }
 
     /**
      * 获取选中图片数量
@@ -112,7 +137,18 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (isShowCamera) return position == 0 ? ITEM_TYPE_CAMERA : ITEM_TYPE_NORMAL;
+
+        if (mHeaderView == null && mFooterView == null) {
+            return ITEM_TYPE_NORMAL;
+        }
+        if (position == 0) {
+            //第一个item应该加载Header
+            return ITEM_TYPE_CAMERA;
+        }
+        /*if (position == getItemCount() - 1) {
+            //最后一个,应该加载Footer
+            return ITEM_TYPE_CAMERA;
+        }*/
         return ITEM_TYPE_NORMAL;
     }
 
@@ -123,24 +159,29 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
+        if (mHeaderView != null) {
+            //加了头布局,多一个
+            return mData.size() + 1;
+        }
+
         return mData.size();
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-
-        if (viewType == ITEM_TYPE_CAMERA) {
-            View view = LayoutInflater.from(mActivity).inflate(R.layout.adapter_camera_item, viewGroup, false);
-            return new CameraViewHolder(view);
-        } else if (viewType == ITEM_TYPE_NORMAL) {
-            View view = LayoutInflater.from(mActivity).inflate(R.layout.adapter_image_list_item, viewGroup, false);
-            return new ItemViewHolder(view);
-        } else {
+        if (mHeaderView != null && viewType == ITEM_TYPE_CAMERA) {
+            return new CameraViewHolder(mHeaderView);
+        }
+   /*     if(mFooterView != null && viewType == TYPE_FOOTER){
+            return new ItemFootViewHolder(mFooterView);
+        }*/
+        if (viewType == ITEM_TYPE_NORMAL) {
             View view = LayoutInflater.from(mActivity).inflate(R.layout.adapter_image_list_item, viewGroup, false);
             return new ItemViewHolder(view);
         }
-
+        View view = LayoutInflater.from(mActivity).inflate(R.layout.adapter_image_list_item, viewGroup, false);
+        return new ItemViewHolder(view);
     }
 
     @Override
@@ -159,44 +200,21 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
 
     }
 
-    /**
-     * 加载本地图片
-     *
-     * @param url
-     * @return
-     */
-    public static Bitmap getLoacalBitmap(String url) {
-        try {
-            FileInputStream fis = new FileInputStream(url);
-            return BitmapFactory.decodeStream(fis);  ///把流转化为Bitmap图片
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
-        int listSize = mData.size();
-        ImageItem item = mData.get(i);
+
         if (viewHolder instanceof ItemViewHolder) {
             final ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
 
-            Log.d(TAG, "onBindViewHolder: " + mActivity);
-
-          /*  if (!item.path.equals(itemViewHolder.mContainer.getTag())) {
-                // 加载图片
-                *//*为什么图片一定要转化为 Bitmap格式的！！ *//*
-
-
-                itemViewHolder.mContainer.setTag(item.path);
-            }*/
+            int itemPosition = i;
+            if (mHeaderView != null) {
+                itemPosition = i - 1;
+            }
+            ImageItem item = mData.get(itemPosition);
             Log.d(TAG, "item.path= " + item.path);
             if (item.path != null) {
-
-
                 Glide.with(mActivity)
                         .load(new File(item.path))
                         .apply(new RequestOptions()
@@ -211,7 +229,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
                                 itemViewHolder.mIcon.setImageDrawable(resource);
                             }
                         });
-            }else{
+            } else {
                 Glide.with(mActivity)
                         .load(R.drawable.ic_default_image)
                         .apply(new RequestOptions()
@@ -274,20 +292,24 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     int layoutPosition = itemViewHolder.getLayoutPosition();
-
+                    if (mHeaderView != null) {
+                        layoutPosition = itemViewHolder.getLayoutPosition() - 1;
+                    }
                     //Toast.makeText(mContext, "点击" + layoutPosition, Toast.LENGTH_SHORT).show();
                     if (mData.get(layoutPosition).isSelected == 0) {
                         //未选中
                         if (mSelectedImages.size() < selectLimit) {
                             mSelectedImages.add(mData.get(layoutPosition));
                             mData.get(layoutPosition).isSelected = 1;
+                        } else {
+                            Toast.makeText(mActivity, "您最多只能选择" + selectLimit + "张照片", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         //已选中
                         mSelectedImages.remove(mData.get(layoutPosition));
                         mData.get(layoutPosition).isSelected = 0;
                     }
-                    notifyItemChanged(layoutPosition);
+                    notifyItemChanged(itemViewHolder.getLayoutPosition());
 
                     if (mOnItemSelectClickListener != null) {
                         mOnItemSelectClickListener.onItemClick(v, layoutPosition);
@@ -321,12 +343,17 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter {
                     }*/
                     if (mOnItemClickListener != null) {
                         int position = itemViewHolder.getLayoutPosition();
+                        if (mHeaderView != null) {
+                            position = itemViewHolder.getLayoutPosition() - 1;
+                        }
                         mOnItemClickListener.onItemClick(v, position);
                     }
 
 
                 }
             });
+
+
         }
 
         if (viewHolder instanceof CameraViewHolder) {

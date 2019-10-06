@@ -26,6 +26,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -176,6 +177,12 @@ public class ImageGridActivity extends ImageBaseActivity {
         mAdapter = new ImageRecyclerAdapter((Activity) mContext, mAllImages, mSelectedImages);
         mAdapter.setHasStableIds (true);
 
+        if(!isMultiMode){
+            View header = LayoutInflater.from(mContext).inflate(R.layout.adapter_camera_item,null);
+            mAdapter.setHeaderView(header);
+        }
+
+
         mRecyclerView.setAdapter(mAdapter);
 
         //选择
@@ -320,14 +327,14 @@ public class ImageGridActivity extends ImageBaseActivity {
                 ImageFolder imageFolder = (ImageFolder) adapterView.getAdapter().getItem(position);
                 if (null != imageFolder) {
                     //mAllImages.clear();
-                    ArrayList<ImageItem> imgs = new ArrayList<>();
+                   /* ArrayList<ImageItem> imgs = new ArrayList<>();
                     imgs.add(new ImageItem());
-                    imgs.addAll(imageFolder.images);
+                    imgs.addAll(imageFolder.images);*/
 
                     //mAllImages.addAll(imgs);
                     //mAdapter.setAllImages(imageFolder.images);
                     //mAdapter.notifyDataSetChanged();
-                    mAdapter.refreshData(imgs);
+                    mAdapter.refreshData(imageFolder.images);
                     mTvDir.setText(imageFolder.name);
                 }
 
@@ -400,6 +407,8 @@ public class ImageGridActivity extends ImageBaseActivity {
                 //if (id == LOADER_CATEGORY)
                 //cursor = new CursorLoader(activity, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION, IMAGE_PROJECTION[1] + " like '%" + args.getString("path") + "%'", null, IMAGE_PROJECTION[6] + " DESC");
                 mAllImages.clear();
+
+
 
                 Cursor cursor = getContentResolver().query(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, IMAGE_PROJECTION[6] + " DESC");
