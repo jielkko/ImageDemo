@@ -88,9 +88,9 @@ public class ImagePreviewActivity extends AppCompatActivity implements View.OnCl
 
         if (data != null && data.getExtras() != null) {
             mImageItems = (ArrayList<ImageItem>) data.getSerializableExtra(ImageGridActivity.EXTRAS_IMAGES);
-            mImageItems.remove(0);
+            //mImageItems.remove(0);
             mCurrentPosition = (int) data.getSerializableExtra(ImageGridActivity.EXTRAS_TAKE_POSITION);
-            mCurrentPosition--;
+            //mCurrentPosition--;
 
             if ((ArrayList<ImageItem>) data.getSerializableExtra(ImageGridActivity.EXTRAS_TAKE_SELECTED) != null) {
                 selectedImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImageGridActivity.EXTRAS_TAKE_SELECTED);

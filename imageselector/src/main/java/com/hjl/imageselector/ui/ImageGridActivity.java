@@ -220,7 +220,7 @@ public class ImageGridActivity extends ImageBaseActivity {
                     Intent intent = new Intent();
                     intent.setClass(ImageGridActivity.this, ImagePreviewActivity.class);
                     intent.putExtra(ImageGridActivity.EXTRAS_TAKE_POSITION, position);
-                    intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, mAllImages);
+                    intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, ImagePicker.getInstance().getCurrentImageFolderItems());
                     intent.putExtra(ImageGridActivity.EXTRAS_TAKE_SELECTED, mSelectedImages);
                     startActivityForResult(intent, 200);
                 } else {
@@ -254,8 +254,8 @@ public class ImageGridActivity extends ImageBaseActivity {
                 allImage.addAll(mSelectedImages);
                 Intent intent = new Intent();
                 intent.setClass(ImageGridActivity.this, ImagePreviewActivity.class);
-                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_POSITION, 1);
-                intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, allImage);
+                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_POSITION, 0)    ;
+                intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, mSelectedImages);
                 intent.putExtra(ImageGridActivity.EXTRAS_TAKE_SELECTED, mSelectedImages);
                 startActivityForResult(intent, 200);
             }
@@ -323,6 +323,7 @@ public class ImageGridActivity extends ImageBaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 mImageFolderAdapter.setSelectIndex(position);
+                ImagePicker.getInstance().setCurrentImageFolderPosition(position);
                 mFolderPopupWindow.dismiss();
                 ImageFolder imageFolder = (ImageFolder) adapterView.getAdapter().getItem(position);
                 if (null != imageFolder) {
@@ -471,6 +472,8 @@ public class ImageGridActivity extends ImageBaseActivity {
                     }
 
                 }
+
+                ImagePicker.getInstance().setImageFolders(mImageFolders);
 
                 //防止没有图片报异常
                 if (cursor != null && mAllImages != null) {
