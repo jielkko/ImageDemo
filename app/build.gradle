@@ -6,8 +6,8 @@ android {
         applicationId "com.newtop.imagedemo"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 9
-        versionName "0.6.0"
+        versionCode 10
+        versionName "0.6.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
