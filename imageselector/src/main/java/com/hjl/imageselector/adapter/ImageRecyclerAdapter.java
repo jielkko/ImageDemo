@@ -24,19 +24,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.bumptech.glide.signature.ObjectKey;
 import com.hjl.imageselector.ImagePicker;
 import com.hjl.imageselector.R;
 import com.hjl.imageselector.bean.ImageItem;
-import com.hjl.imageselector.common.ImageContextUtil;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 public class ImageRecyclerAdapter extends RecyclerView.Adapter {

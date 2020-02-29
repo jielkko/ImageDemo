@@ -175,6 +175,13 @@ public abstract class ImageBaseActivity extends AppCompatActivity implements Eas
                     intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imageList);
                     setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
                     finish();
+                }else{
+                    ArrayList<ImageItem> imageList = new ArrayList<>();
+                    Intent intent = new Intent();
+                    intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imageList);
+                    setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
+                    finish();
+                    finish();
                 }
 
                 break;

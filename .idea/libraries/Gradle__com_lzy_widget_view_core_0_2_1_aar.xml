@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.lzy.widget:view-core:0.2.1@aar">
+    <ANNOTATIONS>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-1/files-1.1/view-core-0.2.1.aar/45541c1174994009edb01674fb9eccd3/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-1/files-1.1/view-core-0.2.1.aar/45541c1174994009edb01674fb9eccd3/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-1/files-1.1/view-core-0.2.1.aar/45541c1174994009edb01674fb9eccd3/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.lzy.widget/view-core/0.2.1/6b75700b7dd391fd38c09507b21cc0d87f6e3220/view-core-0.2.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
