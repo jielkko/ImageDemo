@@ -132,7 +132,9 @@ public class ImageGridActivity extends ImageBaseActivity {
             if ((Boolean) data.getSerializableExtra(EXTRAS_TAKE_PICKERS) != null) {
                 isTakePickers = (Boolean) data.getSerializableExtra(EXTRAS_TAKE_PICKERS);
                 Log.d(TAG, "isTakePickers: " + isTakePickers);
-            }
+
+
+        }
 
         }
 

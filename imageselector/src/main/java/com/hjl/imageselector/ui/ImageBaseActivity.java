@@ -162,19 +162,19 @@ public abstract class ImageBaseActivity extends AppCompatActivity implements Eas
                     imageItem.height = imgHeight;
                     imageList.add(imageItem);
 
-                /*    if (imagePicker.isCrop()) {
-                        Intent intent = new Intent(ImageGridActivity.this, ImageCropActivity.class);
+                    if (ImagePicker.getInstance().isCrop()) {
+                        ImagePicker.getInstance().clearSelectedImages();
+                        ImagePicker.getInstance().addSelectedImageItem(0, imageList.get(0), true);
+                        Intent intent = new Intent(this, ImageCropActivity.class);
+                        intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imageList);
                         startActivityForResult(intent, ImagePicker.REQUEST_CODE_CROP);  //单选需要裁剪，进入裁剪界面
                     } else {
                         Intent intent = new Intent();
-                        intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imagePicker.getSelectedImages());
+                        intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imageList);
                         setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
                         finish();
-                    }*/
-                    Intent intent = new Intent();
-                    intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imageList);
-                    setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
-                    finish();
+                    }
+
                 }else{
                     ArrayList<ImageItem> imageList = new ArrayList<>();
                     Intent intent = new Intent();
